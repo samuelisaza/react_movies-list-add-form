@@ -1,35 +1,41 @@
 import { useState } from 'react';
 import { TextField } from '../TextField';
 import { Movie } from '../../types/Movie';
+import { title } from 'process';
 
 interface Form {
-  title: string,
-  description: string,
-  imgUrl: string,
-  imdbUrl: string,
-  imdbId: string,
+  title: string;
+  description: string;
+  imgUrl: string;
+  imdbUrl: string;
+  imdbId: string;
 }
 
 export const NewMovie = ({ onAdd }: { onAdd: (movie: Movie) => void }) => {
   // Increase the count after successful form submission
   // to reset touched status of all the `Field`s
   const [count, setCount] = useState(0);
-  const [form, setForm] = useState({
+  const initialFormState = {
     title: '',
     description: '',
     imgUrl: '',
     imdbUrl: '',
     imdbId: '',
-  });
-  function isFilled(s?: string) {
-    return Boolean(s && s.trim());
   }
+  const [form, setForm] = useState(initialFormState);
+
+  function isFilled(str?: string) {
+    return Boolean(str && str.trim());
+  }
+
   const isFormValid = Boolean(
-    [form.title, form.imgUrl, form.imdbUrl, form.imdbId].every(isFilled)
+    [form.title, form.imgUrl, form.imdbUrl, form.imdbId].every(isFilled),
   );
+
   function handleChange(name: string, value: string) {
-    setForm(prev => ({ ...prev, [name as keyof Form]: value}));
+    setForm(prev => ({ ...prev, [name as keyof Form]: value }));
   }
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!isFormValid) {
@@ -46,13 +52,7 @@ export const NewMovie = ({ onAdd }: { onAdd: (movie: Movie) => void }) => {
 
     onAdd(movie);
     setCount(prevCount => prevCount + 1);
-    setForm({
-      title: '',
-      description: '',
-      imgUrl: '',
-      imdbUrl: '',
-      imdbId: '',
-    });
+    setForm(initialFormState);
   };
 
   return (
